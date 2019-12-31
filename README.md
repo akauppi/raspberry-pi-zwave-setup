@@ -1,6 +1,6 @@
-# KHT22 Raspberry Pie / Z-Wave
+# Raspberry Pi / Z-Wave Setup
 
-Instructions for setting up Raspberry Pi 4 for thermostat control.
+Instructions for setting up RaspberryPi 4 for thermostat control.
 
 These instructions are based on:
 
@@ -103,6 +103,16 @@ This might be a good time to read the [manuals](https://www.home-assistant.io/do
 
  
 ...
+
+
+## Adding the Z-Stick Gen5
+
+Z-Wave devices need an adapter to be used from a Raspberry Pi. The one we have is an Aeotec [Z-Stick Gen5](https://aeotec.com/z-wave-usb-stick/) USB accessory.
+
+Adding this to Home Assistant:
+
+
+
 
 
 ## Access management
