@@ -101,7 +101,7 @@ This would be a good time to explore the UI in the browser.
 
 It would be nice to have console access to the Raspberry Pi, from my own Mac. Here's how to do it:
 
-- Hass.io > Add-on Store > (install "SSH Server" plugin)[^4ssh]
+- Hass.io > Add-on Store > (install "SSH Server" plugin)[^5ssh]
 - Hass.io > Dashboard > SSH Server
 
   ![](.images/ssh-plugin.png)
@@ -116,17 +116,21 @@ It would be nice to have console access to the Raspberry Pi, from my own Mac. He
 - (after reboot) Hass.io > SSH Server > Open Web UI
   - You should get a command prompt
   - Try also from the PC/Mac: `$ ssh root@hassio.local`.
-  
-[^4ssh]: I also tried "SSH & Web Terminal" but ended up using this on.
+
+Click `Terminal` and you are able to e.g. check that the Home Assistant configuration is healthy:
+
+![](.images/homeassistant-check.png)
 
 >NOTE: You can now edit Hass.io config remotely. SSH also allows one to map the file system if you wish so (see sshfs); you don't need Samba. However: *"This add-on will not enable you to install packages or do anything as root.”*, i.e. you are SSH'ing to within Home Assistant, NOT within the Raspberry Pi itself.
+
+[^5ssh]: I also tried "SSH & Web Terminal" but ended up using this on.
 
 
 ## Read the manuals
 
 This might be a good time to read the [manuals](https://www.home-assistant.io/docs/). They are really rather good. :)
 
-...(hours later)...
+*...(hours later)...*
 
 
 ## Adding the Z-Stick Gen5
@@ -135,7 +139,42 @@ Z-Wave devices need an adapter to be used from a Raspberry Pi. The one we have i
 
 Adding this to Home Assistant:
 
+<!-- disabled (wasn't easy :( )
+>*"You do not need to install any software to use Z-Wave."* <sub>[source](https://www.home-assistant.io/docs/z-wave/installation/)</sub>
 
+Yayyy! 😊
+-->
+
+1. Add a section to `configuration.yaml`:
+
+  ```
+  zwave:
+    usb_path: /dev/ttyACM0
+    network_key: "0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10"
+  ```
+
+  Note: edit some of the `.network_key` values, to make it unique (secret) to you. **Keep a backup** - if you were to need to start from scratch, you'd need this to communicate with devices if they've been tied with secrecy.
+  
+  I also created that `.yaml` file so it's there if I plan to use it.
+  
+2. Attach the Aeotec Z-Stick Gen5 to the Raspberry Pi
+
+3. Hass.io > System > Reboot (not sure if this was needed)
+
+<!-- disabled
+You'll see the Stick in Configuration > Integrations:
+
+![](.images/stick-visible.png)
+-->
+
+You'll see the Stick in Configuration > Z-Wave:
+
+![](.images/config-zwave.png)
+
+<font color="red" size="+2">Q: Is this normal??? I don't have "add node" or any such buttons, as are implied here:
+
+>![](.images/error-no-add-node-button.png)
+</font>
 
 
 
@@ -170,9 +209,31 @@ The approach taken at Katajaharjuntie 22 (housing compound) is to limit access t
 
 ## Notes
 
+### Raspberry Pi 4 power
+
 The power supply needs to be "at least 2.5A" (instructions). Raspberry Pi's own is 3.1A. This is probably what you'll get from USB-C power supplies anyhow, but if you intend to run off a USB-A brick with a suitable cable, be aware.
 
 In particular:
 
 >⚠️ *If you are using a Raspberry Pi please remember to ensure you’re using an appropriate power supply with your Pi. Mobile chargers may not be suitable since some were only designed to provide just enough power to the device it was designed for by the manufacturer. Do not try to power the Pi from the USB port on a TV, computer, or similar.*
+
+### Z-Wave mesh nature
+
+>*"Any device that’s permanently powered (not battery powered) will help build the mesh"* <sub>[source](https://www.home-assistant.io/docs/z-wave/)</sub>
+
+This means while Z-Wave is a mesh network, it's not *automatically* that. E.g. thermostats won't relay data - they need to hear the main hub.
+
+The Aeotec Multisensors can be powered over USB. If you can do this, they will likely work as mesh relays.[^6notes]
+
+[^6notes]: Needs to be checked. Our initial pilot is small enough that all devices likely hear the hub?
+
+
+### Z-Wave Plus
+
+Be aware that the benefits of Z-Wave Plus (see [here](https://www.home-assistant.io/docs/z-wave/devices/#z-wave-plus)) are only available if *all* the devices are Z-Wave Plus.
+
+
+### Instant Status
+
+>*"As long as your device lists Hail or Association in its Controlled Command Classes, then you’ll get instant status updates."* <sub>[source](https://www.home-assistant.io/docs/z-wave/devices/#instant-status)</sub>
 
