@@ -97,12 +97,36 @@ We don't:
 
 This would be a good time to explore the UI in the browser.
 
+### 4. Ssh access
+
+It would be nice to have console access to the Raspberry Pi, from my own Mac. Here's how to do it:
+
+- Hass.io > Add-on Store > (install "SSH Server" plugin)[^4ssh]
+- Hass.io > Dashboard > SSH Server
+
+  ![](.images/ssh-plugin.png)
+
+  - Have an SSH key pair available, or [generate one](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) (GitHub docs)
+  - Enter the public key into "Config" section, as instructed on the page.
+  - Make sure the plugin is started.
+
+- Hass.io > System > Host system > Reboot
+  - Seems to need this, otherwise Web UI gave "502".
+
+- (after reboot) Hass.io > SSH Server > Open Web UI
+  - You should get a command prompt
+  - Try also from the PC/Mac: `$ ssh root@hassio.local`.
+  
+[^4ssh]: I also tried "SSH & Web Terminal" but ended up using this on.
+
+>NOTE: You can now edit Hass.io config remotely. SSH also allows one to map the file system if you wish so (see sshfs); you don't need Samba. However: *"This add-on will not enable you to install packages or do anything as root.”*, i.e. you are SSH'ing to within Home Assistant, NOT within the Raspberry Pi itself.
+
+
 ## Read the manuals
 
-This might be a good time to read the [manuals](https://www.home-assistant.io/docs/). 
+This might be a good time to read the [manuals](https://www.home-assistant.io/docs/). They are really rather good. :)
 
- 
-...
+...(hours later)...
 
 
 ## Adding the Z-Stick Gen5
