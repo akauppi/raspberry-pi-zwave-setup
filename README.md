@@ -188,8 +188,19 @@ Nothing shows under Configuration > Devices:
 
 >![](.images/configuration-devices-empty.png)
 
+---
+
+This is what it's all about:
+
+- [AEOTEC USB Zwave module not creating /dev/ttyACM0](https://github.com/raspberrypi/linux/issues/3027) (raspberrypi/linux GitHub Issues)
+  - [a thread at Raspberry Pi forums](https://www.raspberrypi.org/forums/viewtopic.php?f=28&t=245031#p1502030), linked from the above issue
+
+It's an electric mismatch, looks like the fault would be on Aeotec's side, or just the combination of them and Raspberry Pi 4. 
+
+The only work-arounds currently available (Dec 2019) involve USB 2.0 hubs. That won't do it for me - returning the Z-Stick Gen 5.
 
 ---
+
 
 ## Access management
 
@@ -272,5 +283,13 @@ cu: /dev/cu.usbmodem14532401: Line in use
   ```
 
   Don't know how to switch the LEDs off - may cover by a tape.
+
+
+### Pairing by clicking the buttons (Aeotec Z-Stick Gen 5)
+
+>*"Although possibly not recommended as mentioned by firstof9, I have successfully taken my z-stick out and used the ‘standard’ Aeotec pairing method for many devices. Once you plug it back into your HA server you need to do a reboot and then the new devices should come up in the z-wave config panel"* <sub>[source](https://community.home-assistant.io/t/solved-cant-get-aoetec-z-stick-to-work-with-hassos/141227/5)</sub>
+
+
+
 
 
