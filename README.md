@@ -176,7 +176,20 @@ You'll see the Stick in Configuration > Z-Wave:
 >![](.images/error-no-add-node-button.png)
 </font>
 
+---
 
+This may be relevant:
+
+[SOLVED: Can’t get Aoetec Z-Stick to work with HassOS](https://community.home-assistant.io/t/solved-cant-get-aoetec-z-stick-to-work-with-hassos/141227) (Oct 2019)
+
+>*"Under Configuration>Devices, do you see AEON Labs ZW090 Z-Stick Gen5 US? If you click on it, and click again on the Z-Wave icon, you should see the status card for the device. Toward the top of the card, it should say ready."*
+
+Nothing shows under Configuration > Devices:
+
+>![](.images/configuration-devices-empty.png)
+
+
+---
 
 ## Access management
 
@@ -236,4 +249,28 @@ Be aware that the benefits of Z-Wave Plus (see [here](https://www.home-assistant
 ### Instant Status
 
 >*"As long as your device lists Hail or Association in its Controlled Command Classes, then you’ll get instant status updates."* <sub>[source](https://www.home-assistant.io/docs/z-wave/devices/#instant-status)</sub>
+
+### Aeotec Z-Stick Gen5
+
+Home Assistant [Z-Wave Device Specific Settings](https://www.home-assistant.io/docs/z-wave/device-specific/#aeotec-z-stick) have good stuff e.g. about the Aeotec stick.
+
+#### Disabling the "disco lights" (FAILED!)
+
+Unfortunately, the instructions don't apply when set up with Hass.io (we don't see the actual Linux dev's in the Hass.io terminal).
+
+More instructions [here](echo -e -n "\x01\x08\x00\xF2\x51\x01\x00\x05\x01\x51" > /dev/serial/by-id/usb-0658_0200-if00).
+
+I <strike>did</strike> tried to do it on macOS:
+
+1. Detach the dongle, attach to the Mac
+2. Follow instructions:
+
+  ```
+  $ echo -e -n "\x01\x08\x00\xF2\x51\x01\x00\x05\x01\x51" | cu -l /dev/cu.usbmodem14532401 -s 115200
+cu: creat during lock (/var/spool/uucp/TMP000000c602 in /Users/asko/Git/kht22-rasppie-zwave as uid 501): Permission denied
+cu: /dev/cu.usbmodem14532401: Line in use
+  ```
+
+  Don't know how to switch the LEDs off - may cover by a tape.
+
 
