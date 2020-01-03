@@ -1,0 +1,16 @@
+version: '3'
+services:
+  homeassistant:
+    #container_name: home-assistant
+    image: homeassistant/home-assistant:stable
+    volumes:
+      - /Users/asko/Git/kht22-rasppie-zwave/config:/config
+    environment:
+      - TZ=Europe/Helsinki
+    #restart: always
+    ports:
+      - "127.0.0.1:8123:8123" 
+    network_mode: host
+    devices:
+      - /dev/cu.usbmodem1422401:/dev/zwave
+

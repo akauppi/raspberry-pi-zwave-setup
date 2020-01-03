@@ -1,19 +1,36 @@
 # Raspberry Pi / Z-Wave Setup
 
-Instructions for setting up RaspberryPi 4 for thermostat control.
+Instructions for setting up Raspberry Pi 4 for thermostat control.
 
-These instructions are based on:
 
-- [Install Home Assistant](https://www.home-assistant.io/getting-started/) (Home Assistant docs)
+## Aim
+
+>![](.images/setup.png)
+
+*Figure 1. Intended setup* <sub>[source](https://docs.google.com/drawings/d/1VIDgBshz0PvfjaUF_Vj0qP-S1wKMIlmiicpS6b2awuQ)</sub>
+
+We aim to track one corridor's temperatures and control a few heating elements, during 2019-20 heating season.
+
+This is a very basic setup for Home Assistant. This repo works as the log of what got done and how the system was set up. The repo is intended to be agnostic of the installation location and circumstances, but on the other hand we don't expect to build something generic.
+
+
+### Story so far
+
+Asko got the hardware by the end of 2019. 
+
+Collaboration of the Aeotec Z-Stick Gen5 and Raspberry Pi 4 turned out to be impossible (without a USB hub in the middle) so it was changed into a [RaZberry](https://z-wave.me/products/razberry/) piggy-back board that happened to lie around. Ironically, ease of operation had been the main driver for getting the Aeotec stick.
+
+
 
 ## Required
 
 - Raspberry Pi single board computer
-- Z-Wave adapter (Aeotec Z-Stick Gen5)
+- Z-Wave adapter (RaZberry)
 - Z-Wave peripherals (Aeotec Radiator Thermostat, Aeotec Multisensor 6)
 - Micro-SD card[^1][^2][^3] ("32 GB or larger", "A2" application class)
+- Power source for Raspberry Pi 4
 
->*⚠️ WARNING: A Raspberry Pi 4 package we bought (Dec 2019) contained an A1, 16 GB Micro-SD instead of the recommended 32 GB, A2. Check the details at ordering!*
+>*⚠️ WARNING: The Raspberry Pi 4 starter kit we bought (Dec 2019) contained an A1, 16 GB Micro-SD instead of the recommended 32 GB, A2. Check the details at ordering!*
 
 [^1]: Read e.g. [this review](https://www.androidcentral.com/best-sd-cards-raspberry-pi-4) for tips on suitable cards. TL;DR Buy Samsung EVO+ 32 GB for ~10 Eur
 
@@ -25,19 +42,14 @@ Computers for running the setup:
 
 - Computer with SD adapter (macOS used)
 - SD / MicroSD adapter
-- HDMI display and adapter (any TV will do)
-- USB keyboard
+- HDMI display and adapter (any TV will do); if you are lucky, you can do without! :)
+- USB keyboard; -''-
 
 Models used:
 
-- RPi 4 (4GB), with enclosure
+- Raspberry Pi 4 (4GB)
 
-Scalability: 
-
-RPi 3/3+/4 are mentioned as *"a good starting point, and depending on the amount of devices you integrate this can be enough"* <sub>[source](https://www.home-assistant.io/docs/installation/#performance-expectations)</sub>. 
-
-Z-Wave has a limit of >200 devices / network. Based on the above mention it can be that a Raspberry Pi would have challenges running such? Just need to test and see.
-
+>Note: ONLY use the Raspberry Pi power source for RPi4 (it didn't show any signs of life with a Mac USB-C source, so it's not only about current). Raspberry Pi 3's are way more adaptive, when it comes to powering them. 
 
 ## Downloads
 
@@ -50,6 +62,10 @@ Z-Wave has a limit of >200 devices / network. Based on the above mention it can 
 
 ## Steps
 
+Based on:
+
+- [Install Home Assistant](https://www.home-assistant.io/getting-started/) (Home Assistant docs)
+
 ### 1. Flash the card
 
 ![](.images/balenaEtcher.png)
@@ -58,15 +74,21 @@ Z-Wave has a limit of >200 devices / network. Based on the above mention it can 
 
 We skip this. If you cannot use Ethernet cable, see the [instructions](https://www.home-assistant.io/hassio/installation/) and [here](https://github.com/home-assistant/hassos/blob/dev/Documentation/network.md#wireless-wpapsk).
 
+<!-- draft
+### 3. RaZberry preparation
+
+Skip this if you are using an Aeotec Z-Stick Gen5 (via a hub or on a RPi 3).
+
+The device needs one line to be added to `config.txt` on the flashed SD Card.
+-->
+
 ### 3. Power on!
 
-Connect the RPi to a display, just to see what's happening.
+Connect the RPi to a display, just to see what's happening (optional).
 
 In any case, [http://hassio.local:8123](http://hassio.local:8123) should soon show this:
 
 >![](.images/hassio-loading.png)
-
-*Note: ONLY use the Raspberry Pi power source for RPi4 (it didn't show any signs of life with a Mac USB-C source, so it's not only about current).*
 
 When ready... you'll see this:
 
@@ -74,9 +96,7 @@ When ready... you'll see this:
 
 See [here](https://www.home-assistant.io/docs/authentication/).
 
-Register. 
-
-*Note: It's unclear to Asko (30-Dec-19) how much of this is local, whether some of it is in the cloud.*
+Register. This is only for the local instance of Home Assistant, not any cloud account.
 
 When asked for devices, skip it for now. You should see something like this:
 
@@ -84,9 +104,7 @@ When asked for devices, skip it for now. You should see something like this:
 
 ---
 
-### Where are we now?
-
-Hass.io is running. It starts at `http://hassio.local:8123` each time we turn the Raspberry Pi on.
+Hass.io is now running. It starts at `http://hassio.local:8123` each time we turn the Raspberry Pi on.
 
 We don't:
 
@@ -97,9 +115,10 @@ We don't:
 
 This would be a good time to explore the UI in the browser.
 
+
 ### 4. Ssh access
 
-It would be nice to have console access to the Raspberry Pi, from my own Mac. Here's how to do it:
+It would be nice to have console access to the Raspberry Pi. Here's how to do it:
 
 - Hass.io > Add-on Store > (install "SSH Server" plugin)[^5ssh]
 - Hass.io > Dashboard > SSH Server
@@ -124,6 +143,9 @@ Click `Terminal` and you are able to e.g. check that the Home Assistant configur
 >NOTE: You can now edit Hass.io config remotely. SSH also allows one to map the file system if you wish so (see sshfs); you don't need Samba. However: *"This add-on will not enable you to install packages or do anything as root.”*, i.e. you are SSH'ing to within Home Assistant, NOT within the Raspberry Pi itself.
 
 [^5ssh]: I also tried "SSH & Web Terminal" but ended up using this on.
+
+#### Ssh to host (HassOS)
+
 
 
 ## Read the manuals
